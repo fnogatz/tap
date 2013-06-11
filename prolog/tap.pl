@@ -1,40 +1,5 @@
-:- module(tap, [ run_test//2
-               , tap_macro_sentinel/0
-               ]).
-:- use_module(library(tap_raw), [ tap_header/1 ]).
-
-%% tap_macro_sentinel.
-%
-%  Implementation detail, ignore.
-%
-%  Importing library(tap) imports this predicate.  When its present
-%  in a module, it implies that that module wants library(tap) to
-%  perform macro expansion.
-tap_macro_sentinel.
-
-run_test(ok, Test, Count0, Count) :-
-    ( call(Test) ->
-        test_result(ok, Test, Count0, Count)
-    ; % otherwise ->
-        test_result('not ok', Test, Count0, Count)
-    ).
-run_test(fails, Test, Count0, Count) :-
-    ( call(Test) ->
-        test_result('not ok', Test, Count0, Count)
-    ; % otherwise ->
-        test_result(ok, Test, Count0, Count)
-    ).
-
-test_result(Status, Test, N0, N) :-
-    succ(N0, N),
-    Test =.. [Name|_Options],
-    format('~w ~w - ~w~n', [Status, N0, Name]).
-
-test_expectation([], ok, []).
-test_expectation([fails|Options], fails, Options) :- !.
-test_expectation([todo|Options], todo, Options) :- !.
-test_expectation([_|Options], Type) :-
-    test_expectation(Options, Type).
+:- module(tap, []).
+:- reexport(library(tap_raw), [ tap_header/1, tap_call/3 ]).
 
 % Thread a state variable through a list of predicates.  This is similar
 % to a DCG expansion, but much simpler.
@@ -54,27 +19,26 @@ xfy_list(Op, Term, [Left|List]) :-
     !.
 xfy_list(_, Term, [Term]).
 
-user_wants_tap :-
-    prolog_load_context(module, user),
-    predicate_property(user:tap_macro_sentinel, imported_from(tap)).
+% True if the current context implies that the user wants this
+% term to be expanded as a test predicate.
+term_wants_tap_expansion :-
+    prolog_load_context(module, user).
 
-:- dynamic test_case/3, user:main/0.
+:- dynamic test_case/1, user:main/0.
 user:term_expansion((Head:-_), _) :-
-    % collect test cases as the predicates are defined
-    user_wants_tap,
-    Head =.. [_|Options0],
-    test_expectation(Options0, Expect, Options),
-    tap:assertz(test_case(Head, Expect, Options)),
+    % collect test cases as each predicate is defined
+    term_wants_tap_expansion,
+    tap:assertz(test_case(Head)),
     fail.
 user:term_expansion(end_of_file, _) :-
-    % build main and tap_body
-    user_wants_tap,
-    findall(run_test(Expect,Head), tap:test_case(Head,Expect,_), Tests0),
+    % build main/0
+    term_wants_tap_expansion,
+    findall(tap_call(Head), tap:test_case(Head), Tests0),
     length(Tests0, TestCount),
     thread_state(Tests0, Tests, 1, _),
-    xfy_list(',', Body, [tap_raw:tap_header(TestCount)|Tests]),
+    xfy_list(',', Body, [tap_header(TestCount)|Tests]),
     user:assertz((main :- Body)),
 
     % undo all database side effects
-    tap:retractall(test_case(_,_)),
+    tap:retractall(test_case(_)),
     fail.
