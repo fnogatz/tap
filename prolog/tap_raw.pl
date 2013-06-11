@@ -63,6 +63,17 @@ run_test(fail, Test, Count0, Count) :-
     ; % otherwise ->
         test_result(ok, Test, Count0, Count)
     ).
+run_test(todo(Reason), Test, Count0, Count) :-
+    format(atom(Todo), 'TODO ~w', [Reason]),
+    ( call_det(Test, Det) ->
+        ( Det = true ->
+            test_result(ok, Test, Todo, Count0, Count)
+        ; Det = false ->
+            test_result('not ok', Test, Todo, Count0, Count)
+        )
+    ; % otherwise ->
+        test_result('not ok', Test, Todo, Count0, Count)
+    ).
 
 % Helper for generating a single TAP result line
 test_result(Status,Test,N0,N) :-
@@ -79,6 +90,7 @@ test_result(Status, Test, Comment, N0, N) :-
 % Determine the expected result based on a test predicate's arguments
 test_expectation([], ok, []).
 test_expectation([fail|Options], fail, Options) :- !.
-test_expectation([todo|Options], todo, Options) :- !.
+test_expectation([todo(Reason)|Options], todo(Reason), Options) :- !.
+test_expectation([fixme(Reason)|Options], todo(Reason), Options) :- !.
 test_expectation([_|Options], Type) :-
     test_expectation(Options, Type).
