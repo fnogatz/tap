@@ -24,6 +24,11 @@ tap_call(Head, Count0, Count) :-
     test_expectation(Options0, Expectation, _Options),
     run_test(Expectation, Head, Count0, Count).
 
+% implementation borrowed from PlUnit
+call_det(Goal, Det) :-
+    call_cleanup(Goal,Det0=true),
+    ( var(Det0) -> Det = false ; Det = true ).
+
 %% tap_call(+Head) is det.
 %
 %  Like tap_call/3 but automatically generates a State.
@@ -43,8 +48,12 @@ tap_state(1).
 % Run a single test, generating TAP output based on results
 % and expectations.
 run_test(ok, Test, Count0, Count) :-
-    ( call(Test) ->
-        test_result(ok, Test, Count0, Count)
+    ( call_det(Test, Det) ->
+        ( Det = true ->
+            test_result(ok, Test, Count0, Count)
+        ; Det = false ->
+            test_result('not ok', Test, Count0, Count)
+        )
     ; % otherwise ->
         test_result('not ok', Test, Count0, Count)
     ).
