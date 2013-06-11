@@ -7,7 +7,7 @@
     % define test predicates here
     'two plus two is four' :-
         4 is 2+2.
-    'zero not equal to one'(fails) :-
+    'zero not equal to one'(fail) :-
         0 =:= 1.
 
 Run tests with standard TAP tools like prove:
@@ -41,7 +41,7 @@ All predicates defined after loading library(tap) are considered test
 cases.  The predicate's name is the test name.  By default, a
 predicate must succeed without leaving any choicepoints for the test
 to pass.  If a predicate is expected to fail, give it the argument
-`fails` in the clause head.  See the Synopsis above for a simple example.
+`fail` in the clause head.  See the Synopsis above for a simple example.
 
 library(tap) does not yet support the entire TAP specification and is
 missing many features found in PlUnit.  Both are temporary shortcomings.

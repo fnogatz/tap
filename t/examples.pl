@@ -3,5 +3,5 @@
 'simplest possible test case' :-
     true.
 
-'simplest failing test case'(fails) :-
+'simplest failing test case'(fail) :-
     fail.

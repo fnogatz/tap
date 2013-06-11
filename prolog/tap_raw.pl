@@ -57,7 +57,7 @@ run_test(ok, Test, Count0, Count) :-
     ; % otherwise ->
         test_result('not ok', Test, Count0, Count)
     ).
-run_test(fails, Test, Count0, Count) :-
+run_test(fail, Test, Count0, Count) :-
     ( call(Test) ->
         test_result('not ok', Test, Count0, Count)
     ; % otherwise ->
@@ -78,7 +78,7 @@ test_result(Status, Test, Comment, N0, N) :-
 
 % Determine the expected result based on a test predicate's arguments
 test_expectation([], ok, []).
-test_expectation([fails|Options], fails, Options) :- !.
+test_expectation([fail|Options], fail, Options) :- !.
 test_expectation([todo|Options], todo, Options) :- !.
 test_expectation([_|Options], Type) :-
     test_expectation(Options, Type).
