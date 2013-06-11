@@ -1,7 +1,6 @@
 :- module(tap, [ run_test//2
                , tap_header/1
                ]).
-:- use_module(library(list_util)).
 
 tap_header(TestCount) :-
     format('TAP version 13~n'),
@@ -40,6 +39,15 @@ thread_state([P0|Preds0], [P|Preds], In, Out) :-
     P =.. [Functor|NewArgs],
     thread_state(Preds0, Preds, Tmp, Out).
 
+% Identical to list_util:xfy_list/3.  Copied here so that library(tap)
+% can have no pack dependencies.  That lets other packs use library(tap)
+% without circular dependencies.
+xfy_list(Op, Term, [Left|List]) :-
+    Term =.. [Op, Left, Right],
+    xfy_list(Op, Right, List),
+    !.
+xfy_list(_, Term, [Term]).
+
 user_wants_tap :-
     prolog_load_context(module, user),
     predicate_property(user:tap_header(_), imported_from(tap)).
@@ -58,7 +66,7 @@ user:term_expansion(end_of_file, _) :-
     findall(run_test(Expect,Head), tap:test_case(Head,Expect,_), Tests0),
     length(Tests0, TestCount),
     thread_state(Tests0, Tests, 1, _),
-    list_util:xfy_list(',', Body, [tap_header(TestCount)|Tests]),
+    xfy_list(',', Body, [tap_header(TestCount)|Tests]),
     user:assertz((main :- Body)),
 
     % undo all database side effects
