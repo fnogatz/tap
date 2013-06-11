@@ -1,0 +1,57 @@
+# Synopsis
+
+    :- use_module(to_be_tested).
+    % define helper predicates here
+
+    :- use_module(library(tap)).
+    % define test predicates here
+    'two plus two is four' :-
+        4 is 2+2.
+    'zero not equal to one'(fails) :-
+        0 =:= 1.
+
+Run the tests with standard TAP tools like prove:
+
+    $ prove -v -e 'swipl -q -t main -f' t/example.pl
+    TAP version 13
+    1..2
+    ok 1 - two plus two is four
+    ok 2 - zero not equal to one
+    ok
+
+# Description
+
+The [Test Anything Protocol](http://testanything.org/) is a text-based
+interface between test scripts and a test harness.  A wide range of
+tools exist for running, rendering and analyzing test results.  By
+writing your Prolog tests with TAP, you get access to this entire
+testing infrastructure.  For example,
+[interactive HTML output](http://www.spurkis.org/TAP-Formatter-HTML/test-output.html).
+
+TAP tests traditionally reside in a t/ directory in your project's
+root.  Each file beneath t/ encapsulates a collection of tests related
+to a specific topic. During development, one can run all test files or
+just an interesting subset.  In its most basic form, a test file is an
+script which generates TAP output.  library(tap) makes it easier
+to create these scripts.
+
+To write a test file with library(tap), load all code that you'll need
+for testing.  Define any helper predicates.  Then load library(tap).
+All predicates defined after loading library(tap) are considered test
+cases.  The predicate's name is the test name.  By default, a
+predicate must succeed without leaving any choicepoints for the test
+to pass.  If a predicate is expected to fail, give it the argument
+`fails` in the clause head.  See the Synopsis above for a simple example.
+
+library(tap) does not yet support the entire TAP specification and is
+missing many features found in PlUnit.  Both are temporary shortcomings.
+I expect the library to fill these gaps eventually.
+
+# Installation
+
+Using SWI-Prolog 6.3 or later:
+
+    ?- pack_install(tap).
+
+@author Michael Hendricks <michael@ndrix.org>
+@license BSD
