@@ -52,7 +52,7 @@ run_test(ok, Test, Count0, Count) :-
         ( Det = true ->
             test_result(ok, Test, Count0, Count)
         ; Det = false ->
-            test_result('not ok', Test, Count0, Count)
+            test_result('not ok', Test, 'left unexpected choice points', Count0, Count)
         )
     ; % otherwise ->
         test_result('not ok', Test, Count0, Count)
@@ -65,10 +65,16 @@ run_test(fails, Test, Count0, Count) :-
     ).
 
 % Helper for generating a single TAP result line
-test_result(Status, Test, N0, N) :-
+test_result(Status,Test,N0,N) :-
+    test_result(Status,Test,_,N0,N).
+test_result(Status, Test, Comment, N0, N) :-
     succ(N0, N),
     Test =.. [Name|_Options],
-    format('~w ~w - ~w~n', [Status, N0, Name]).
+    ( var(Comment) ->
+        format('~w ~w - ~w~n', [Status, N0, Name])
+    ; % otherwise ->
+        format('~w ~w - ~w # ~w~n', [Status, N0, Name, Comment])
+    ).
 
 % Determine the expected result based on a test predicate's arguments
 test_expectation([], ok, []).
