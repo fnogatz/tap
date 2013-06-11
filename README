@@ -10,7 +10,7 @@
     'zero not equal to one'(fails) :-
         0 =:= 1.
 
-Run the tests with standard TAP tools like prove:
+Run tests with standard TAP tools like prove:
 
     $ prove -v -e 'swipl -q -t main -f' t/example.pl
     TAP version 13
@@ -24,16 +24,16 @@ Run the tests with standard TAP tools like prove:
 The [Test Anything Protocol](http://testanything.org/) is a text-based
 interface between test scripts and a test harness.  A wide range of
 tools exist for running, rendering and analyzing test results.  By
-writing your Prolog tests with TAP, you get access to this entire
+writing your Prolog tests with TAP, you get access to all this
 testing infrastructure.  For example,
 [interactive HTML output](http://www.spurkis.org/TAP-Formatter-HTML/test-output.html).
 
 TAP tests traditionally reside in a t/ directory in your project's
 root.  Each file beneath t/ encapsulates a collection of tests related
 to a specific topic. During development, one can run all test files or
-just an interesting subset.  In its most basic form, a test file is an
-script which generates TAP output.  library(tap) makes it easier
-to create these scripts.
+just an interesting subset.  In its most basic form, a test file is a
+script which generates TAP output.  library(tap) helps you
+write these scripts.
 
 To write a test file with library(tap), load all code that you'll need
 for testing.  Define any helper predicates.  Then load library(tap).
