@@ -1,5 +1,6 @@
 :- module(tap, []).
-:- reexport(library(tap_raw), [ tap_header/1, tap_call/3 ]).
+:- reexport(library(tap_raw), [ tap_header/1, tap_call/3, tap_call/1 ]).
+:- use_module(library(tap_raw), [tap_state/1]).
 
 % Thread a state variable through a list of predicates.  This is similar
 % to a DCG expansion, but much simpler.
@@ -35,7 +36,8 @@ user:term_expansion(end_of_file, _) :-
     term_wants_tap_expansion,
     findall(tap_call(Head), tap:test_case(Head), Tests0),
     length(Tests0, TestCount),
-    thread_state(Tests0, Tests, 1, _),
+    tap_state(State),
+    thread_state(Tests0, Tests, State, _),
     xfy_list(',', Body, [tap_header(TestCount)|Tests]),
     user:assertz((main :- Body)),
 
