@@ -26,11 +26,6 @@ term_wants_tap_expansion :-
     prolog_load_context(module, user).
 
 :- dynamic test_case/1, user:main/0.
-user:term_expansion((Head:-_), _) :-
-    % collect test cases as each predicate is defined
-    term_wants_tap_expansion,
-    tap:assertz(test_case(Head)),
-    fail.
 user:term_expansion(end_of_file, _) :-
     % build main/0
     term_wants_tap_expansion,
@@ -44,3 +39,15 @@ user:term_expansion(end_of_file, _) :-
     % undo all database side effects
     tap:retractall(test_case(_)),
     fail.
+user:term_expansion((Head:-_), _) :-
+    % collect test cases with explicit names
+    term_wants_tap_expansion,
+    tap:assertz(test_case(Head)),
+    fail.  % do no real expansion
+user:term_expansion(Clause, (Head :- Clause)) :-
+    % collect test cases whose name is the test content
+    term_wants_tap_expansion,
+    \+ functor(Clause, :-, _),
+    Clause \== end_of_file,
+    format(atom(Head), "~w", [Clause]),
+    tap:assertz(test_case(Head)).
