@@ -90,6 +90,7 @@ test_result(Status, Test, Comment, N0, N) :-
 % Determine the expected result based on a test predicate's arguments
 test_expectation([], ok, []).
 test_expectation([fail|Options], fail, Options) :- !.
+test_expectation([todo|Options], todo(''), Options) :- !.
 test_expectation([todo(Reason)|Options], todo(Reason), Options) :- !.
 test_expectation([fixme(Reason)|Options], todo(Reason), Options) :- !.
 test_expectation([_|Options], Type) :-
