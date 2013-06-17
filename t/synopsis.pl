@@ -7,3 +7,4 @@
     4 is 2+2.
 'zero not equal to one'(fail) :-
     0 =:= 1.
+6 is 3*2.
