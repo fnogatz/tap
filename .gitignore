@@ -1,5 +1,6 @@
 *~
 *.swp
 
-# gift generated documentation
+# gift generated files
 doc/
+tap-*.tgz
