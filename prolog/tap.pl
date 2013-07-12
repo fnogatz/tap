@@ -2,6 +2,9 @@
 :- reexport(library(tap_raw), [ tap_header/1, tap_call/3, tap_call/1 ]).
 :- use_module(library(tap_raw), [tap_state/1]).
 
+register_test(Head) :-
+    tap:assertz(test_case(Head)).
+
 % Thread a state variable through a list of predicates.  This is similar
 % to a DCG expansion, but much simpler.
 thread_state([], [], Out, Out).

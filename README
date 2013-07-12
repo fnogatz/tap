@@ -69,6 +69,45 @@ Acceptable arguments are:
   * `todo(Reason)` - test is known to fail but report it in TAP output as "TODO Reason".  TAP tools treat these tests differently.
   * `todo` - same as `todo('')`
 
+# Macros that write tests
+
+It's common for each test case in a test file to follow a similar pattern.
+For example, we might have tests for the length/2 predicate:
+
+    :- use_module(library(tap)).
+    'length([a,b,c],3)' :-
+        length([a,b,c], N),
+        N = 3.
+    'length([a,b],2)' :-
+        length([a,b], N),
+        N = 2.
+    ...
+
+Because of all the similarity, that's tedious to write and tedious to
+read.  We can factor out the redundancy by creating a macro:
+
+    % ... macro goes here ...
+    
+    :- use_module(library(tap)).
+    [a,b,c] -> 3.
+    [a,b] -> 2.
+
+That's much better.  A regular term_expansion/2 macro that calls
+tap:register_test/1 does the job:
+
+    term_expansion(List -> Length, (Head :- Test)) :-
+    format(atom(Head), 'length(~w, ~w)', [List, Length]),
+    Test = (
+        length(List, Len),
+        Len = Length
+    ),
+    tap:register_test(Head)
+
+Without registering, our nicely constructed test case won't run.  Macros are
+especially convenient when testing multiple modes of a single predicate.  You
+can decribe the relationship once and have the macro write a separate test case
+for each mode.
+
 # Installation
 
 Using SWI-Prolog 6.3 or later:
