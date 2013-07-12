@@ -5,10 +5,13 @@
 
     :- use_module(library(tap)).
     % define test predicates here
+    
     'two plus two is four' :-
         4 is 2+2.
+    
     'zero not equal to one'(fail) :-
         0 =:= 1.
+    
     6 is 3*2.
 
 Run tests with standard TAP tools like prove:
