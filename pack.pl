@@ -1,5 +1,5 @@
 name(tap).
-version('0.1.0').
+version('0.1.1').
 title('Automated tests via Test Anything Protocol').
 author('Michael Hendricks','michael@ndrix.org').
 packager('Michael Hendricks','michael@ndrix.org').
