@@ -75,5 +75,8 @@ Using SWI-Prolog 6.3 or later:
 
     ?- pack_install(tap).
 
+Source code available and pull requests accepted at
+https://github.com/mndrix/tap
+
 @author Michael Hendricks <michael@ndrix.org>
 @license BSD
