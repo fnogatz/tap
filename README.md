@@ -110,6 +110,11 @@ especially convenient when testing multiple modes of a single predicate.  You
 can decribe the relationship once and have the macro write a separate test case
 for each mode.
 
+# Changes in this Version
+
+  * Avoid infinite TAP output on unexpected test exceptions
+  * Add `throws(E)` option for testing predicates that throw exceptions
+
 # Installation
 
 Using SWI-Prolog 6.3 or later:
