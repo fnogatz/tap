@@ -78,6 +78,12 @@ run_test(todo(Reason), Test, Count0, Count) :-
     ; % otherwise ->
         test_result('not ok', Test, Todo, Count0, Count)
     ).
+run_test(throws(E), Test, Count0, Count) :-
+    ( call_ending(Test,exception(E)) ->
+        test_result(ok, Test, Count0, Count)
+    ; % otherwise ->
+        test_result('not ok', Test, Count0, Count)
+    ).
 
 % Helper for generating a single TAP result line
 test_result(Status,Test,N0,N) :-
@@ -97,5 +103,7 @@ test_expectation([fail|Options], fail, Options) :- !.
 test_expectation([todo|Options], todo(''), Options) :- !.
 test_expectation([todo(Reason)|Options], todo(Reason), Options) :- !.
 test_expectation([fixme(Reason)|Options], todo(Reason), Options) :- !.
+test_expectation([throws(E)|Options], throws(E), Options) :- !.
+test_expectation([error(E)|Options], throws(E), Options) :- !.
 test_expectation([_|Options], Type) :-
     test_expectation(Options, Type).

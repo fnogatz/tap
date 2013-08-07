@@ -64,10 +64,12 @@ expectations about the test.  Arguments look like this:
 
 Acceptable arguments are:
 
+  * `error(E)` - same as `throws(E)`. Supported for symmetry with PlUnit.
   * `fail` - test is expected to fail
   * `fixme(Reason)` - same as `todo(Reason)`. Supported for symmetry with PlUnit.
   * `todo(Reason)` - test is known to fail but report it in TAP output as "TODO Reason".  TAP tools treat these tests differently.
   * `todo` - same as `todo('')`
+  * `throws(E)` - throws exception `E`
 
 # Macros that write tests
 
