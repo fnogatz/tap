@@ -88,7 +88,7 @@ For example, we might have tests for the length/2 predicate:
 Because of all the similarity, that's tedious to write and tedious to
 read.  We can factor out the redundancy by creating a macro:
 
-    % ... macro goes here ...
+    % ... macro definition goes here ...
     
     :- use_module(library(tap)).
     [a,b,c] -> 3.
@@ -98,12 +98,12 @@ That's much better.  A regular term_expansion/2 macro that calls
 tap:register_test/1 does the job:
 
     term_expansion(List -> Length, (Head :- Test)) :-
-    format(atom(Head), 'length(~w, ~w)', [List, Length]),
-    Test = (
-        length(List, Len),
-        Len = Length
-    ),
-    tap:register_test(Head)
+        format(atom(Head), 'length(~w, ~w)', [List, Length]),
+        Test = (
+            length(List, Len),
+            Len = Length
+        ),
+        tap:register_test(Head).
 
 Without registering, our nicely constructed test case won't run.  Macros are
 especially convenient when testing multiple modes of a single predicate.  You
