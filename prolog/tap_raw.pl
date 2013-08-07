@@ -24,10 +24,18 @@ tap_call(Head, Count0, Count) :-
     test_expectation(Options0, Expectation, _Options),
     run_test(Expectation, Head, Count0, Count).
 
-% implementation borrowed from PlUnit
-call_det(Goal, Det) :-
-    call_cleanup(Goal,Det0=true),
-    ( var(Det0) -> Det = false ; Det = true ).
+% Call Goal and bind Ending to explain how it turned out.
+% If Goal fails, call_ending fails too.
+% `Ending=det` if Goal succeeded without choicepoints.
+% `Ending=choicepoints` if Goal succeeded and left choicepoints.
+% `Ending=exception(E)` if threw an exception.
+call_ending(Goal, Ending) :-
+    catch( call_cleanup(Goal,Cleanup=det)
+         , Exception
+         , Cleanup=exception(Exception)
+         ),
+    ( var(Cleanup) -> Ending=choicepoints ; Ending=Cleanup ).
+
 
 %% tap_call(+Head) is det.
 %
@@ -48,29 +56,25 @@ tap_state(1).
 % Run a single test, generating TAP output based on results
 % and expectations.
 run_test(ok, Test, Count0, Count) :-
-    ( call_det(Test, Det) ->
-        ( Det = true ->
-            test_result(ok, Test, Count0, Count)
-        ; Det = false ->
-            test_result('not ok', Test, 'left unexpected choice points', Count0, Count)
-        )
+    call_ending(Test, Ending),
+    ( Ending = det ->
+        test_result(ok, Test, Count0, Count)
+    ; Ending = choicepoints ->
+        test_result('not ok', Test, 'left unexpected choice points', Count0, Count)
     ; % otherwise ->
-        test_result('not ok', Test, Count0, Count)
+        test_result('not ok', Test, Ending, Count0, Count)
     ).
 run_test(fail, Test, Count0, Count) :-
-    ( call(Test) ->
+    ( call_ending(Test, _) ->
         test_result('not ok', Test, Count0, Count)
     ; % otherwise ->
         test_result(ok, Test, Count0, Count)
     ).
 run_test(todo(Reason), Test, Count0, Count) :-
     format(atom(Todo), 'TODO ~w', [Reason]),
-    ( call_det(Test, Det) ->
-        ( Det = true ->
-            test_result(ok, Test, Todo, Count0, Count)
-        ; Det = false ->
-            test_result('not ok', Test, Todo, Count0, Count)
-        )
+    call_ending(Test, Ending),
+    ( Ending = det ->
+        test_result(ok, Test, Todo, Count0, Count)
     ; % otherwise ->
         test_result('not ok', Test, Todo, Count0, Count)
     ).
