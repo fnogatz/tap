@@ -112,9 +112,7 @@ for each mode.
 
 # Changes in this Version
 
-  * Handle unexpected choicepoints on `todo` tests
-  * Make failing `todo` tests behave again
-  * Minor documentation fixes
+  * Run all tests if a single one fails
 
 # Installation
 
