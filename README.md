@@ -112,8 +112,9 @@ for each mode.
 
 # Changes in this Version
 
-  * Avoid infinite TAP output on unexpected test exceptions
-  * Add `throws(E)` option for testing predicates that throw exceptions
+  * Handle unexpected choicepoints on `todo` tests
+  * Make failing `todo` tests behave again
+  * Minor documentation fixes
 
 # Installation
 
