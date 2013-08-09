@@ -73,8 +73,7 @@ run_test(fail, Test, Count0, Count) :-
     ).
 run_test(todo(Reason), Test, Count0, Count) :-
     format(atom(Todo), 'TODO ~w', [Reason]),
-    call_ending(Test, Ending),
-    ( Ending = det ->
+    ( call_ending(Test, Ending), Ending=det ->
         test_result(ok, Test, Todo, Count0, Count)
     ; % otherwise ->
         test_result('not ok', Test, Todo, Count0, Count)
