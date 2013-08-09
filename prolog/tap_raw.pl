@@ -34,7 +34,8 @@ call_ending(Goal, Ending) :-
          , Exception
          , Cleanup=exception(Exception)
          ),
-    ( var(Cleanup) -> Ending=choicepoints ; Ending=Cleanup ).
+    ( var(Cleanup) -> Ending=choicepoints ; Ending=Cleanup ),
+    !.  % cut any choicepoints left by Goal, after checking Cleanup
 
 
 %% tap_call(+Head) is det.
