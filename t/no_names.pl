@@ -1,5 +1,6 @@
 % Tests whose name is the clause itself
 :- use_module(library(tap)).
+:- style_check(-no_effect).
 
 % some examples taken nearly from ISO §8.4.1.4
 1.0 @< 1.
