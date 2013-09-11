@@ -12,6 +12,7 @@ tap_header(TestCount) :-
     format('TAP version 13~n'),
     format('1..~d~n', [TestCount]).
 
+
 %% tap_call(+Head, +State0, -State) is det.
 %
 %  Calls Head as a test case and generates TAP output for
@@ -57,13 +58,21 @@ tap_state(1).
 % Run a single test, generating TAP output based on results
 % and expectations.
 run_test(ok, Test, Count0, Count) :-
-    call_ending(Test, Ending),
-    ( Ending = det ->
-        test_result(ok, Test, Count0, Count)
-    ; Ending = choicepoints ->
-        test_result('not ok', Test, 'left unexpected choice points', Count0, Count)
-    ; % otherwise ->
-        test_result('not ok', Test, Ending, Count0, Count)
+    ( call_ending(Test, Ending) ->
+        ( Ending = det ->
+            test_result(ok, Test, Count0, Count)
+        ; Ending = choicepoints ->
+            test_result( 'not ok'
+                       , Test
+                       , 'left unexpected choice points'
+                       , Count0
+                       , Count
+                       )
+        ; % otherwise ->
+            test_result('not ok', Test, Ending, Count0, Count)
+        )
+    ; % call failed ->
+        test_result('not ok', Test, failed, Count0, Count)
     ).
 run_test(fail, Test, Count0, Count) :-
     ( call_ending(Test, _) ->
