@@ -112,7 +112,7 @@ for each mode.
 
 # Changes in this Version
 
-  * Run all tests if a single one fails
+  * Avoid warning on newer SWI versions
 
 # Installation
 
