@@ -12,3 +12,7 @@
 
 'passing todo test with reason'(todo(reason)) :-
     true.
+
+
+'todo test that throws an exception'(todo) :-
+    throw('oops').
