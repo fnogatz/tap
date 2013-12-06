@@ -11,3 +11,6 @@
 
 % include an unnamed, failing test as well.
 9 =:= 7.
+
+'exception thrown when failure expected'(fail) :-
+    throw('catch this').
