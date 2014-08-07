@@ -112,7 +112,9 @@ for each mode.
 
 # Changes in this Version
 
-  * Avoid warning on newer SWI versions
+  * Test for exceptions when failure expected
+  * Todo tests can throw exceptions
+  * Explicitly import append/3
 
 # Installation
 
