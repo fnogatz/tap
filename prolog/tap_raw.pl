@@ -2,6 +2,8 @@
                    , tap_call/3
                    , tap_header/1
                    , tap_state/1
+                   , diag/2
+                   , is_test_running/0
                    ]).
 
 %% tap_header(+TestCount:integer) is det.
@@ -22,7 +24,11 @@ tap_header(TestCount) :-
 tap_call(Head, Count0, Count) :-
     Head =.. [_|Options0],
     test_expectation(Options0, Expectation, _Options),
-    run_test(Expectation, Head, Count0, Count).
+    setup_call_cleanup(
+        assertz(is_test_running,Ref),
+        run_test(Expectation, Head, Count0, Count),
+        erase(Ref)
+    ).
 
 % Call Goal and bind Ending to explain how it turned out.
 % The predicate always succeeds.
@@ -115,3 +121,27 @@ test_expectation([throws(E)|Options], throws(E), Options) :- !.
 test_expectation([error(E)|Options], throws(E), Options) :- !.
 test_expectation([_|Options], Type) :-
     test_expectation(Options, Type).
+
+
+%% is_test_running is semidet.
+%
+%  True if a TAP test is in progress.  It's true for all goals inside
+%  the dynamic scope of a TAP test.  See also diag/2.
+:- dynamic is_test_running/0.
+
+
+%% diag(+Format,+Args) is det.
+%
+%  Like debug/3 for TAP tests.  When a TAP test is running
+%  (see is_test_running/0) sends a diagnostic message to the TAP output.
+%  It behaves as a noop in other circumstances.  Format and Args are
+%  passed through to format/2.
+diag(Format,Args) :-
+    is_test_running,
+    !,
+    with_output_to(user_error, (
+        write('# '),
+        format(Format,Args),
+        nl
+    )).
+diag(_,_).
