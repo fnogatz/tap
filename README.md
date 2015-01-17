@@ -110,12 +110,6 @@ especially convenient when testing multiple modes of a single predicate.  You
 can decribe the relationship once and have the macro write a separate test case
 for each mode.
 
-# Changes in this Version
-
-  * Test for exceptions when failure expected
-  * Todo tests can throw exceptions
-  * Explicitly import append/3
-
 # Installation
 
 Using SWI-Prolog 6.3 or later:
