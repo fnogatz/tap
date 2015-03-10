@@ -120,6 +120,3 @@ Source code available and pull requests accepted at
 https://github.com/mndrix/tap
 
 This module uses [semantic versioning](http://semver.org/).
-
-@author Michael Hendricks <michael@ndrix.org>
-@license BSD
