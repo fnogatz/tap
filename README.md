@@ -16,7 +16,7 @@
 
 Run tests with standard TAP tools like prove:
 
-    $ prove -v -e 'swipl -q -t main -f' t/example.pl
+    $ prove -v -e 'swipl -q -t main -s' t/example.pl
     TAP version 13
     1..3
     ok 1 - two plus two is four
