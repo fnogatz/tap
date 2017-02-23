@@ -1,3 +1,7 @@
+# v0.4.0 (2017-02-23)
+
+  * Better handling of multifile tests
+
 # v0.3.1 (2015-09-12)
 
   * Correct packaging error
