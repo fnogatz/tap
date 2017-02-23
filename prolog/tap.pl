@@ -33,6 +33,7 @@ term_wants_tap_expansion :-
 user:term_expansion(end_of_file, _) :-
     % build main/0
     term_wants_tap_expansion,
+    prolog_load_context(script, true),
     findall(tap_call(Head), tap:test_case(Head), Tests0),
     length(Tests0, TestCount),
     tap_state(State),
