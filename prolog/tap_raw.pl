@@ -1,6 +1,7 @@
 :- module(tap_raw, [ tap_call/1
                    , tap_call/3
                    , tap_header/1
+                   , tap_footer/2
                    , tap_state/1
                    , diag/2
                    , is_test_running/0
@@ -14,6 +15,23 @@ tap_header(TestCount) :-
     format('TAP version 13~n'),
     format('1..~d~n', [TestCount]).
 
+
+%% tap_footer(+TestCount:integer, +EndState) is det.
+%
+%  Output a TAP footer.  This includes the number of 
+%  run, passed, and possibly failing tests.
+tap_footer(TestCount, state(_,PassedCount)) :-
+    format('~n'),
+    format('# tests ~d~n', [TestCount]),
+    format('# pass  ~d~n', [PassedCount]),
+    ( PassedCount < TestCount ->
+        FailedCount is TestCount-PassedCount,
+        format('# fail  ~d~n', [0])
+    ; % otherwise ->
+        true
+    ).
+
+
 %% tap_call(+Head, +State0, -State) is det.
 %
 %  Calls Head as a test case and generates TAP output for
@@ -21,12 +39,12 @@ tap_header(TestCount) :-
 %  generating correct TAP output.
 %
 %  See tap_state/1 and tap_call/1
-tap_call(Head, Count0, Count) :-
+tap_call(Head, State0, State) :-
     Head =.. [_|Options0],
     test_expectation(Options0, Expectation, _Options),
     setup_call_cleanup(
         assertz(is_test_running,Ref),
-        run_test(Expectation, Head, Count0, Count),
+        run_test(Expectation, Head, State0, State),
         erase(Ref)
     ).
 
@@ -63,52 +81,59 @@ tap_call(Head) :-
 %  Unifies State with an opaque, starting state.
 %  You should almost never need to call this directly.
 %  Use tap_call/1 instead.
-tap_state(1).
+tap_state(state(1,0)).
 
 % Run a single test, generating TAP output based on results
 % and expectations.
-run_test(ok, Test, Count0, Count) :-
+run_test(ok, Test, State0, State) :-
     call_ending(Test, Ending),
     ( Ending = det ->
-        test_result(ok, Test, Count0, Count)
+        test_result(ok, Test, State0, State)
     ; Ending = choicepoints ->
-        test_result('not ok', Test, 'left unexpected choice points', Count0, Count)
+        test_result('not ok', Test, 'left unexpected choice points', State0, State)
     ; % otherwise ->
-        test_result('not ok', Test, Ending, Count0, Count)
+        test_result('not ok', Test, Ending, State0, State)
     ).
-run_test(fail, Test, Count0, Count) :-
+run_test(fail, Test, State0, State) :-
     call_ending(Test, Ending),
     ( Ending = fail ->
-        test_result(ok, Test, Count0, Count)
+        test_result(ok, Test, State0, State)
     ; % otherwise ->
-        test_result('not ok', Test, Count0, Count)
+        test_result('not ok', Test, State0, State)
     ).
-run_test(todo(Reason), Test, Count0, Count) :-
+run_test(todo(Reason), Test, State0, State) :-
     format(atom(Todo), 'TODO ~w', [Reason]),
     call_ending(Test, Ending),
     ( Ending=det ->
-        test_result(ok, Test, Todo, Count0, Count)
+        test_result(ok, Test, Todo, State0, State)
     ; % otherwise ->
-        test_result('not ok', Test, Todo, Count0, Count)
+        test_result('not ok', Test, Todo, State0, State)
     ).
-run_test(throws(E), Test, Count0, Count) :-
+run_test(throws(E), Test, State0, State) :-
     call_ending(Test,Ending),
     ( Ending = exception(E) ->
-        test_result(ok, Test, Count0, Count)
+        test_result(ok, Test, State0, State)
     ; % otherwise ->
-        test_result('not ok', Test, Count0, Count)
+        test_result('not ok', Test, State0, State)
     ).
 
 % Helper for generating a single TAP result line
-test_result(Status,Test,N0,N) :-
-    test_result(Status,Test,_,N0,N).
-test_result(Status, Test, Comment, N0, N) :-
-    succ(N0, N),
+test_result(Status,Test,State0,State) :-
+    test_result(Status,Test,_,State0,State).
+test_result(Status, Test, Comment, State0, State) :-
+    State0 = state(Count0,Passed0),
+    succ(Count0,Count),
+    State = state(Count,Passed),
+    ( Status = ok ->
+        succ(Passed0, Passed)
+    ; % otherwise ->
+        Passed0 = Passed
+    ),
     Test =.. [Name|_Options],
     ( var(Comment) ->
-        format('~w ~w - ~w~n', [Status, N0, Name])
+        format('~w ~w - ~w~n', [Status, Count0, Name])
     ; % otherwise ->
-        format('~w ~w - ~w # ~w~n', [Status, N0, Name, Comment])
+        format('~w ~w - ~w # ~w~n', [Status, Count0, Name, Comment])
     ).
 
 % Determine the expected result based on a test predicate's arguments
