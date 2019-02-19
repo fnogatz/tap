@@ -26,7 +26,7 @@ tap_footer(TestCount, state(_,PassedCount)) :-
     format('# pass  ~d~n', [PassedCount]),
     ( PassedCount < TestCount ->
         FailedCount is TestCount-PassedCount,
-        format('# fail  ~d~n', [0])
+        format('# fail  ~d~n', [FailedCount])
     ; % otherwise ->
         true
     ).
