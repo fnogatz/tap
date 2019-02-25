@@ -1,3 +1,8 @@
+# v0.4.1 (2019-02-25)
+
+  * Print summary at the end of tests
+  * Move repository from mndrix/tap to fnogatz/tap
+
 # v0.4.0 (2017-02-23)
 
   * Better handling of multifile tests
