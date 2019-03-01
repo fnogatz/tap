@@ -16,13 +16,15 @@
 
 Run tests with standard TAP tools like prove:
 
-    $ prove -v -e 'swipl -q -t main -s' t/example.pl
+    $ prove -v -e 'swipl -q -t main -s' test/examples.pl
     TAP version 13
     1..3
     ok 1 - two plus two is four
     ok 2 - zero not equal to one
     ok 3 - 6 is 3*2
-    ok
+
+    # tests 3
+    # pass  3
 
 # Description
 
