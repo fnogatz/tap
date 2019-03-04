@@ -1,30 +1,34 @@
 # Synopsis
 
-    :- use_module(to_be_tested).
-    % define helper predicates here
+```prolog
+:- use_module(to_be_tested).
+% define helper predicates here
 
-    :- use_module(library(tap)).
-    % define test predicates here
-    
-    'two plus two is four' :-
-        4 is 2+2.
-    
-    'zero not equal to one'(fail) :-
-        0 =:= 1.
-    
-    6 is 3*2.
+:- use_module(library(tap)).
+% define test predicates here
+
+'two plus two is four' :-
+    4 is 2+2.
+
+'zero not equal to one'(fail) :-
+    0 =:= 1.
+
+6 is 3*2.
+```
 
 Run tests with standard TAP tools like prove:
 
-    $ prove -v -e 'swipl -q -t main -s' test/examples.pl
-    TAP version 13
-    1..3
-    ok 1 - two plus two is four
-    ok 2 - zero not equal to one
-    ok 3 - 6 is 3*2
+```shell
+$ prove -v -e 'swipl -q -t main -s' test/examples.pl
+TAP version 13
+1..3
+ok 1 - two plus two is four
+ok 2 - zero not equal to one
+ok 3 - 6 is 3*2
 
-    # tests 3
-    # pass  3
+# tests 3
+# pass  3
+```
 
 # Description
 
@@ -61,8 +65,10 @@ I expect the library to fill these gaps eventually.
 A test predicate can optionally include arguments to change TAP's
 expectations about the test.  Arguments look like this:
 
-    'test with arguments'(Arg1, Arg2, ...) :-
-        ...
+```prolog
+'test with arguments'(Arg1, Arg2, ...) :-
+    ...
+```
 
 Acceptable arguments are:
 
@@ -78,34 +84,40 @@ Acceptable arguments are:
 It's common for each test case in a test file to follow a similar pattern.
 For example, we might have tests for the length/2 predicate:
 
-    :- use_module(library(tap)).
-    'length([a,b,c],3)' :-
-        length([a,b,c], N),
-        N = 3.
-    'length([a,b],2)' :-
-        length([a,b], N),
-        N = 2.
-    ...
+```prolog
+:- use_module(library(tap)).
+'length([a,b,c],3)' :-
+    length([a,b,c], N),
+    N = 3.
+'length([a,b],2)' :-
+    length([a,b], N),
+    N = 2.
+...
+```
 
 Because of all the similarity, that's tedious to write and tedious to
 read.  We can factor out the redundancy by creating a macro:
 
-    % ... macro definition goes here ...
-    
-    :- use_module(library(tap)).
-    [a,b,c] -> 3.
-    [a,b] -> 2.
+```prolog
+% ... macro definition goes here ...
+
+:- use_module(library(tap)).
+[a,b,c] -> 3.
+[a,b] -> 2.
+```
 
 That's much better.  A regular term_expansion/2 macro that calls
 tap:register_test/1 does the job:
 
-    term_expansion(List -> Length, (Head :- Test)) :-
-        format(atom(Head), 'length(~w, ~w)', [List, Length]),
-        Test = (
-            length(List, Len),
-            Len = Length
-        ),
-        tap:register_test(Head).
+```prolog
+term_expansion(List -> Length, (Head :- Test)) :-
+    format(atom(Head), 'length(~w, ~w)', [List, Length]),
+    Test = (
+        length(List, Len),
+        Len = Length
+    ),
+    tap:register_test(Head).
+```
 
 Without registering, our nicely constructed test case won't run.  Macros are
 especially convenient when testing multiple modes of a single predicate.  You
@@ -116,9 +128,11 @@ for each mode.
 
 Using SWI-Prolog 7.1 or later:
 
-    ?- pack_install(tap).
+```prolog
+?- pack_install(tap).
+```
 
 Source code available and pull requests accepted at
-https://github.com/mndrix/tap
+https://github.com/fnogatz/tap
 
 This module uses [semantic versioning](http://semver.org/).
