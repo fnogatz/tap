@@ -22,7 +22,7 @@ tap_header(TestCount) :-
 %  run, passed, and possibly failing tests.
 tap_footer(TestCount, state(_,_,Time0), state(_,PassedCount1,Time1)) :-
     format('~n'),
-    Duration is Time1-Time0,
+    Duration is (Time1-Time0)*1000,
     format('# time=~1fms~n', [Duration]),
     format('# tests ~d~n', [TestCount]),
     format('# pass  ~d~n', [PassedCount1]),
