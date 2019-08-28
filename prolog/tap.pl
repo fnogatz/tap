@@ -1,5 +1,5 @@
 :- module(tap, []).
-:- reexport(library(tap_raw), [tap_header/1,tap_footer/2,tap_call/3,tap_call/1,diag/2]).
+:- reexport(library(tap_raw), [tap_header/1,tap_footer/3,tap_call/3,tap_call/1,diag/2]).
 :- use_module(library(tap_raw), [tap_state/1]).
 :- use_module(library(lists), [append/3]).
 
@@ -38,7 +38,7 @@ user:term_expansion(end_of_file, _) :-
     length(Tests0, TestCount),
     tap_state(State0),
     thread_state(Tests0, Tests1, State0, State),
-    append(Tests1, [tap_footer(TestCount, State)], Tests2),
+    append(Tests1, [tap_footer(TestCount, State0, State)], Tests2),
     xfy_list(',', Body, [tap_header(TestCount)|Tests2]),
     user:assertz((main :- Body)),
 

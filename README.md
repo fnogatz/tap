@@ -21,13 +21,17 @@ Run tests with standard TAP tools like prove:
 ```shell
 $ prove -v -e 'swipl -q -t main -s' test/examples.pl
 TAP version 13
-1..3
-ok 1 - two plus two is four
-ok 2 - zero not equal to one
-ok 3 - 6 is 3*2
+1..4
+ok 1 - simplest possible test case
+ok 2 - simplest failing test case
+ok 3 - generates a diagnostic message
+# I'm a diagnostic message
+ok 4 - long-running test case
 
-# tests 3
-# pass  3
+# time=1.0ms
+# tests 4
+# pass  4
+
 ```
 
 # Description

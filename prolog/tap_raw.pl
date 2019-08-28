@@ -1,7 +1,7 @@
 :- module(tap_raw, [ tap_call/1
                    , tap_call/3
                    , tap_header/1
-                   , tap_footer/2
+                   , tap_footer/3
                    , tap_state/1
                    , diag/2
                    , is_test_running/0
@@ -16,16 +16,18 @@ tap_header(TestCount) :-
     format('1..~d~n', [TestCount]).
 
 
-%% tap_footer(+TestCount:integer, +EndState) is det.
+%% tap_footer(+TestCount:integer, +StartState, +EndState) is det.
 %
 %  Output a TAP footer.  This includes the number of 
 %  run, passed, and possibly failing tests.
-tap_footer(TestCount, state(_,PassedCount)) :-
+tap_footer(TestCount, state(_,_,Time0), state(_,PassedCount1,Time1)) :-
     format('~n'),
+    Duration is Time1-Time0,
+    format('# time=~1fms~n', [Duration]),
     format('# tests ~d~n', [TestCount]),
-    format('# pass  ~d~n', [PassedCount]),
-    ( PassedCount < TestCount ->
-        FailedCount is TestCount-PassedCount,
+    format('# pass  ~d~n', [PassedCount1]),
+    ( PassedCount1 < TestCount ->
+        FailedCount is TestCount-PassedCount1,
         format('# fail  ~d~n', [FailedCount])
     ; % otherwise ->
         true
@@ -81,7 +83,8 @@ tap_call(Head) :-
 %  Unifies State with an opaque, starting state.
 %  You should almost never need to call this directly.
 %  Use tap_call/1 instead.
-tap_state(state(1,0)).
+tap_state(state(1,0,Time)) :-
+    get_time(Time).
 
 % Run a single test, generating TAP output based on results
 % and expectations.
@@ -121,9 +124,10 @@ run_test(throws(E), Test, State0, State) :-
 test_result(Status,Test,State0,State) :-
     test_result(Status,Test,_,State0,State).
 test_result(Status, Test, Comment, State0, State) :-
-    State0 = state(Count0,Passed0),
+    State0 = state(Count0,Passed0,_Time0),
     succ(Count0,Count),
-    State = state(Count,Passed),
+    State = state(Count,Passed,Time),
+    get_time(Time),
     ( Status = ok ->
         succ(Passed0, Passed)
     ; % otherwise ->

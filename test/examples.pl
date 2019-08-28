@@ -8,3 +8,6 @@
 
 'generates a diagnostic message' :-
     diag("I'm a ~s message", ["diagnostic"]).
+
+'long-running test case' :-
+    sleep(1).
