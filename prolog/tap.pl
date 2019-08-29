@@ -9,7 +9,7 @@ register_test(Head) :-
 % Thread a state variable through a list of predicates.  This is similar
 % to a DCG expansion, but much simpler.
 thread_state([], [], Out, Out).
-thread_state([P0|Preds0], [P|Preds], In, Out) :-
+thread_state([P0|Preds0], [tap:P|Preds], In, Out) :-
     P0 =.. [Functor|Args],
     append(Args, [In, Tmp], NewArgs),
     P =.. [Functor|NewArgs],
@@ -38,8 +38,8 @@ user:term_expansion(end_of_file, _) :-
     length(Tests0, TestCount),
     tap_state(State0),
     thread_state(Tests0, Tests1, State0, State),
-    append(Tests1, [tap_footer(TestCount, State0, State)], Tests2),
-    xfy_list(',', Body, [tap_header(TestCount)|Tests2]),
+    append(Tests1, [tap:tap_footer(TestCount, State0, State)], Tests2),
+    xfy_list(',', Body, [tap:tap_header(TestCount)|Tests2]),
     user:assertz((main :- Body)),
 
     % undo all database side effects
