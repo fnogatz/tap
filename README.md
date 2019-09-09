@@ -82,7 +82,7 @@ Acceptable arguments are:
   * `todo` - same as `todo('')`
   * `throws(E)` - throws exception `E`
 
-# Macros that write tests
+# <a name="macros"></a>Macros that write tests
 
 It's common for each test case in a test file to follow a similar pattern.
 For example, we might have tests for the length/2 predicate:
@@ -139,3 +139,15 @@ Source code available and pull requests accepted at
 https://github.com/fnogatz/tap
 
 This module uses [semantic versioning](http://semver.org/).
+
+# Projects using library(tap)
+
+Here is a non-exhaustive list of projects that use library(tap). Most of them use [the macro approach](#macros), so they can be a good inspiration on how to define tests in Prolog:
+
+- [clitable](https://github.com/fnogatz/clitable)
+- [date_time](https://github.com/fnogatz/date_time)
+- [dcg4pt](https://github.com/fnogatz/dcg4pt)
+- [plammar](https://github.com/fnogatz/plammar)
+- [regex](https://github.com/mndrix/regex)
+
+Please open an issue if you want to have your project listed here.
