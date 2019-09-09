@@ -1,7 +1,7 @@
 name(tap).
 
-version('0.5.2').
-download('https://github.com/fnogatz/tap/archive/v0.5.2.zip').
+version('0.5.3').
+download('https://github.com/fnogatz/tap/archive/v0.5.3.zip').
 
 title('Automated tests via Test Anything Protocol').
 author('Falco Nogatz','fnogatz@gmail.com').
