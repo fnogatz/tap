@@ -5,6 +5,8 @@
                    , tap_state/1
                    , diag/2
                    , is_test_running/0
+                   , term_wants_tap_expansion/0
+                   , register_test/1
                    ]).
 
 %% tap_header(+TestCount:integer) is det.
@@ -152,6 +154,12 @@ test_expectation([_|Options], Type) :-
     test_expectation(Options, Type).
 
 
+% True if the current context implies that the user wants this
+% term to be expanded as a test predicate.
+term_wants_tap_expansion :-
+    prolog_load_context(module, user).
+
+
 %% is_test_running is semidet.
 %
 %  True if a TAP test is in progress.  It's true for all goals inside
@@ -174,3 +182,7 @@ diag(Format,Args) :-
         nl
     )).
 diag(_,_).
+
+
+register_test(Head) :-
+    tap:assertz(test_case(Head)).
