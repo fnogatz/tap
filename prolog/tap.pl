@@ -1,6 +1,6 @@
 :- module(tap, []).
-:- reexport(library(tap_raw), [tap_header/1,tap_footer/3,tap_call/3,tap_call/1,diag/2]).
-:- use_module(library(tap_raw), [tap_state/1]).
+:- reexport(library(tap/raw), [tap_header/1,tap_footer/3,tap_call/3,tap_call/1,diag/2]).
+:- use_module(library(tap/raw), [tap_state/1]).
 :- use_module(library(lists), [append/3]).
 
 register_test(Head) :-
