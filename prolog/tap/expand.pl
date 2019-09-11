@@ -18,5 +18,4 @@ user:term_expansion(Clause, (Head :- Clause)) :-
     Clause \== end_of_file,
     \+ term_skips_tap_expansion(Clause),
     format(atom(Head), "~w", [Clause]),
-    writeln(Clause),
     tap:assertz(test_case(Head)).
