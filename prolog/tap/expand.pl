@@ -18,4 +18,12 @@ user:term_expansion(Clause, (Head :- Clause)) :-
     Clause \== end_of_file,
     \+ term_skips_tap_expansion(Clause),
     format(atom(Head), "~w", [Clause]),
+    Head \== Clause,
     tap:assertz(test_case(Head)).
+user:term_expansion(Fact, (Fact :- true)) :-
+    % collect test cases which are just facts
+    term_wants_tap_expansion,
+    functor(Fact, _, 0),
+    Fact \== end_of_file,
+    \+ term_skips_tap_expansion(Fact),
+    tap:assertz(test_case(Fact)).

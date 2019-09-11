@@ -11,3 +11,5 @@
 
 'long-running test case' :-
     sleep(1).
+
+simply_a_fact.
