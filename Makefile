@@ -16,7 +16,7 @@ install:
 	@echo "(none)"
 
 test:
-	@$(SWIPL) -q -g 'main,halt(0)' -t 'halt(1)' -s test/examples.pl
+	@$(SWIPL) -q -g "asserta(user:file_search_path(library, 'prolog')),main,halt(0)" -t "halt(1)" -s test/examples.pl
 
 package: test
 	tar cvzf $(packfile) prolog test pack.pl README.md LICENSE
