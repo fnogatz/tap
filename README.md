@@ -118,7 +118,7 @@ This module uses [semantic versioning](http://semver.org/).
 
 Here is a non-exhaustive list of projects that use library(tap). Most of them use [the macro approach](#macros), so they can be a good inspiration on how to define tests in Prolog:
 
-- [clitable](https://github.com/fnogatz/clitable)
+- [cli_table](https://github.com/fnogatz/cli_table)
 - [date_time](https://github.com/fnogatz/date_time)
 - [dcg4pt](https://github.com/fnogatz/dcg4pt)
 - [plammar](https://github.com/fnogatz/plammar)
