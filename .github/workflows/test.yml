@@ -19,8 +19,9 @@ jobs:
       run: |
         source ~/.swivm/swivm.sh
         swivm install $SWI_VERSION
-        swivm use $SWI_VERSION
 
     - name: Run tests
       run: |
+        source ~/.swivm/swivm.sh
+        swivm use $SWI_VERSION
         make test
