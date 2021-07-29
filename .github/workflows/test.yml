@@ -16,7 +16,9 @@ jobs:
       uses: fnogatz/swivm/actions/install@add-github-action
 
     - name: Load swivm
-      run: . ~/.swivm/swivm.sh
+      run: |
+        ls ~/.swivm
+        . ~/.swivm/swivm.sh
 
     - name: Install SWI-Prolog
       run: |
