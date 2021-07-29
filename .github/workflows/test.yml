@@ -17,8 +17,8 @@ jobs:
 
     - name: Load swivm
       run: |
-        ls ~/.swivm
-        source ~/.swivm/swivm.sh
+        ls $HOME/.swivm
+        source $HOME/.swivm/swivm.sh
 
     - name: Install SWI-Prolog
       run: |
