@@ -1,0 +1,21 @@
+name: test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      SWI_VERSION: devel
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install swivm
+      uses: fnogatz/swivm/actions/install@add-github-action
+
+    - name: Install SWI-Prolog
+      run: >
+        swivm install $SWI_VERSION && 
+        swivm use $SWI_VERSION
