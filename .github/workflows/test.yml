@@ -1,9 +1,10 @@
-name: test
+name: Automatic tests
 
 on: [push, pull_request]
 
 jobs:
-  test:
+  make_test:
+    name: make test
     runs-on: ubuntu-latest
 
     steps:
