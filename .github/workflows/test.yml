@@ -12,8 +12,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Install swivm
-      uses: fnogatz/swivm/actions/load@add-github-action
+    - name: Install swivm and SWI-Prolog
+      uses: fnogatz/swivm/actions/load
       with:
         swi-prolog-version: devel
 
