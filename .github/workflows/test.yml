@@ -5,8 +5,6 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      SWI_VERSION: devel
 
     steps:
     - name: Checkout
@@ -20,5 +18,4 @@ jobs:
     - name: Run tests
       run: |
         source ~/.swivm/swivm.sh
-        swivm use $SWI_VERSION
         make test
