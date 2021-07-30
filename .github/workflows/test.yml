@@ -13,12 +13,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Install swivm
-      uses: fnogatz/swivm/actions/install@add-github-action
-
-    - name: Install SWI-Prolog
-      run: |
-        source ~/.swivm/swivm.sh
-        swivm install $SWI_VERSION
+      uses: fnogatz/swivm/actions/load@add-github-action
+      with:
+        swi-prolog-version: devel
 
     - name: Run tests
       run: |
