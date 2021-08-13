@@ -2,7 +2,7 @@
 
 version := $(shell swipl -q -s pack -g 'version(V),writeln(V)' -t halt)
 packfile = tap-$(version).tgz
-pwd := $(pwd)
+pwd := $(shell pwd)
 
 SWIPL := swipl
 
@@ -17,7 +17,7 @@ install:
 	@echo "(none)"
 
 test:
-	@$(SWIPL) -q -p library=$(pwd)/prolog -g "main,halt(0)" -t "halt(1)" -s test/examples.pl
+	$(SWIPL) -q -p library=$(pwd)/prolog -g "main,halt(0)" -t "halt(1)" -s test/examples.pl
 
 package: test
 	tar cvzf $(packfile) prolog test pack.pl README.md LICENSE
