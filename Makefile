@@ -2,7 +2,7 @@
 
 SWIPL ?= swipl
 
-version := $(shell $(SWIPL) -q -s pack -g 'version(V),writeln(V)' -t halt)
+version = $(shell $(SWIPL) -q -s pack -g 'version(V),writeln(V)' -t halt)
 packfile = tap-$(version).tgz
 pwd := $(shell pwd)
 
