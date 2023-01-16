@@ -11,6 +11,10 @@ all: test
 version:
 	@echo $(version)
 
+info:
+	@echo "tap:\t\t$(version)"
+	@echo "SWI-Prolog:\t$(shell $(SWIPL) --version)"
+
 check: test
 
 install:
