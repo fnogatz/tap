@@ -12,15 +12,15 @@ jobs:
         swipl: [devel, stable, 6, 7, 8, 9]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Install swivm and SWI-Prolog
-      uses: fnogatz/swivm/actions/load@main
-      with:
-        swi-prolog-version: ${{ matrix.swipl }}
+      - name: Install swivm and SWI-Prolog
+        uses: fnogatz/swivm/actions/load@main
+        with:
+          swi-prolog-version: ${{ matrix.swipl }}
 
-    - name: Run tests
-      run: |
-        source ~/.swivm/swivm.sh
-        make test
+      - name: Run tests
+        run: |
+          source ~/.swivm/swivm.sh
+          make test
